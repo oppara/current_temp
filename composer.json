@@ -1,0 +1,29 @@
+{
+  "name": "oppara/current_temp",
+  "type": "application",
+  "description": "Tweets current temp at Tokyo hourly.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "oppara",
+      "email": "oppara@oppara.tv"
+    }
+  ],
+  "require": {
+    "php": ">=5.5",
+    "ext-mbstring": "*",
+    "fabpot/goutte": "~2.0",
+    "abraham/twitteroauth": "0.5.*",
+    "mailgun/mailgun-php": "^1.8",
+    "monolog/monolog": "@stable",
+    "vlucas/phpdotenv": "^1.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Oppara\\CurrentTemp\\": "lib/"
+    }
+  }
+}
