@@ -27,7 +27,7 @@ set_exception_handler('exception_handler');
 if (isWebDyno()) {
     $ua = $_SERVER['HTTP_USER_AGENT'];
     $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    $logger->info("Web  browser access. ip:$ip ua:$ua");
+    $Logger->info("Web  browser access. ip:$ip ua:$ua");
     exit(0);
 }
 
