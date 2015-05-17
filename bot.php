@@ -3,8 +3,6 @@
  * CurrentTemp (Twitter Bot)
  *
  * https://twitter.com/current_temp
- *
- * 毎時7,8分頃に更新されるので、10分頃に実行させると吉
  */
 
 date_default_timezone_set('Asia/Tokyo');
