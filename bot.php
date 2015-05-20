@@ -14,6 +14,8 @@ use Monolog\Handler\StreamHandler;
 use Mailgun\Mailgun;
 use Oppara\CurrentTemp\CurrentTemp;
 
+define('CURRENT_TEMP_MAX_RETRY', 2);
+define('CURRENT_TEMP_SLEEP', 120);
 
 if (!isHeroku()) {
     Dotenv::load(__DIR__);
@@ -40,9 +42,25 @@ $config = [
     'debug'               => getenv('DEBUG'),
 ];
 
-$CurrentTemp = new CurrentTemp($config);
-$tweet = $CurrentTemp->tweet();
-$Logger->info($tweet);
+$retry = 0;
+while (true) {
+    try {
+        $CurrentTemp = new CurrentTemp($config);
+        $tweet = $CurrentTemp->tweet();
+        $Logger->info($tweet);
+        break;
+    } catch (Exception $e) {
+        $message = $e->getMessage();
+        if ($retry >= CURRENT_TEMP_MAX_RETRY || strpos($message, 'temperature') === false) {
+            throw $e;
+        }
+
+        sleep(CURRENT_TEMP_SLEEP);
+        $retry += 1;
+        $Logger->info("retry: $retry");
+    }
+}
+
 
 
 function isHeroku()
