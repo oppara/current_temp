@@ -2,7 +2,7 @@
 
 namespace Oppara\CurrentTemp;
 
-use Goutte\Client;
+use Goutte\Client as GoutteClient;
 
 class AmedasTokyo
 {
@@ -18,7 +18,7 @@ class AmedasTokyo
 
     protected function createClient()
     {
-        return new \Goutte\Client();
+        return new GoutteClient();
     }
 
     public function getTemperature()

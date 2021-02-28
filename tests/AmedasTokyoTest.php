@@ -2,7 +2,7 @@
 
 namespace Oppara\CurrentTemp;
 
-use Goutte\Client;
+use Goutte\Client as GoutteClient;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Message\Response as GuzzleResponse;
 use GuzzleHttp\Stream\Stream;
@@ -11,14 +11,14 @@ use GuzzleHttp\Subscriber\Mock;
 use Oppara\CurrentTemp\AmedasTokyo;
 
 
-class TestAmedasTokyo extends \Oppara\CurrentTemp\AmedasTokyo
+class TestAmedasTokyo extends AmedasTokyo
 {
     private $stream;
 
     protected function createClient()
     {
         $this->setStream();
-        $client = new \Goutte\Client();
+        $client = new GoutteClient();
         $client->setClient($this->getGuzzle());
 
         return $client;
