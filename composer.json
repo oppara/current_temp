@@ -9,6 +9,11 @@
       "email": "oppara@oppara.tv"
     }
   ],
+  "scripts": {
+    "test": [
+      "phpunit"
+    ]
+  },
   "require": {
     "php": ">=5.5",
     "ext-mbstring": "*",
