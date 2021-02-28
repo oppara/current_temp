@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Oppara\CurrentTemp;
 
@@ -6,14 +7,24 @@ use Goutte\Client as GoutteClient;
 
 class AmedasTokyo
 {
-    const FMT_URL = 'http://www.jma.go.jp/jp/amedas_h/%s-44132.html';
+    /**
+     * 指定した日時の気象情報データの URL
+     */
+    public const URL_FMT = 'https://www.jma.go.jp/bosai/amedas/data/map/%s.json';
 
-    private $hour;
+    /**
+     * 気象情報データ内の東京の ID
+     */
+    public const TOKYO = 44132;
 
-    public function __construct($hour = null)
+    /**
+     * __construct
+     *
+     * @param string $datetimeString Y-m-d H:00:00
+     */
+    public function __construct($datetimeString = '')
     {
-        $this->client = $this->createClient();
-        $this->hour = $this->getHour($hour);
+        $this->url = $this->makeUrl($datetimeString);
     }
 
     protected function createClient()
@@ -23,38 +34,18 @@ class AmedasTokyo
 
     public function getTemperature()
     {
-        $url = $this->makeUrl();
+        $client = $this->createClient();
 
-        $crawler = $this->client->request('GET', $url);
-        $pos = $this->hour + 1;
-        $values = $crawler->filter('#tbl_list tr')->eq($pos)->children()->each(function ($node, $i){
-            return $node->text();
-        });
+        $crawler = $client->request('GET', $this->url);
+        $data = json_decode($crawler->text(), true);
 
-        return str_replace([' ', ' '], '', $values[1]);
+        return $data[self::TOKYO]['temp'][0];
     }
 
-    private function getHour($hour)
+    public function makeUrl($str)
     {
-        if (is_null($hour) || $hour < 0 || 24 < $hour) {
-            $hour = date('G');
-        }
+        $datetime = new \DateTime($str, new \DateTimeZone('Asia/Tokyo'));
 
-        $hour = intval($hour);
-        if ($hour === 0) {
-            $hour = 24;
-        }
-
-        return intval($hour);
-    }
-
-    private function makeUrl()
-    {
-        $state = 'today';
-        if ($this->hour == 0 || $this->hour == 24) {
-            $state = 'yesterday';
-        }
-
-        return sprintf(self::FMT_URL, $state);
+        return sprintf(self::URL_FMT,  $datetime->format('YmdH0000'));
     }
 }

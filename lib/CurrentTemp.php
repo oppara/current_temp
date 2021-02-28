@@ -1,15 +1,16 @@
 <?php
+declare(strict_types=1);
 
 namespace Oppara\CurrentTemp;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
-use Oppara\CurrentTemp\AmedasTokyo;
 
 class CurrentTemp
 {
-    const FMT_MESSAGE = '%s°C %s';
+    public const FMT_MESSAGE = '%s°C %s';
 
     private $dateFormat = 'ga M jS';
+
     private $config;
 
     public function __construct($config)
@@ -20,7 +21,7 @@ class CurrentTemp
     public function tweet()
     {
         $temperature = $this->getTemperature();
-        if ($temperature == '') {
+        if ($temperature === '') {
             throw new \Exception('could not get temperature.');
         }
 
@@ -32,10 +33,11 @@ class CurrentTemp
         }
 
         $status = $TwitterOAuth->post('statuses/update', ['status' => $message]);
-        if ($TwitterOAuth->getLastHttpCode() != 200) {
+        if ($TwitterOAuth->getLastHttpCode() !== 200) {
             $code = $status->errors[0]->code;
             $message = $status->errors[0]->message;
-            throw new \Exception("[$code] $message");
+
+            throw new \Exception("[${code}] ${message}");
         }
 
         return $message;
@@ -48,7 +50,7 @@ class CurrentTemp
 
     protected function getTemperature()
     {
-        $AmedasTokyo = new \Oppara\CurrentTemp\AmedasTokyo();
+        $AmedasTokyo = new AmedasTokyo();
 
         return $AmedasTokyo->getTemperature();
     }
@@ -57,8 +59,6 @@ class CurrentTemp
     {
         $cfg = $this->config;
 
-        return new \Abraham\TwitterOAuth\TwitterOAuth($cfg['consumer_key'], $cfg['consumer_secret'], $cfg['access_token'], $cfg['access_token_secret']);
+        return new TwitterOAuth($cfg['consumer_key'], $cfg['consumer_secret'], $cfg['access_token'], $cfg['access_token_secret']);
     }
-
-
 }
