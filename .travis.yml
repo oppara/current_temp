@@ -5,6 +5,7 @@ php:
   - 8.0
 
 before_script:
+  - rm composer.lock
   - travis_retry composer install --no-interaction --prefer-source
 
 script:
