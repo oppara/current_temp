@@ -3,47 +3,15 @@ declare(strict_types=1);
 
 namespace Oppara\CurrentTemp;
 
-use Goutte\Client as GoutteClient;
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Message\Response as GuzzleResponse;
-use GuzzleHttp\Stream\Stream;
-use GuzzleHttp\Subscriber\History;
-use GuzzleHttp\Subscriber\Mock;
 use PHPUnit\Framework\TestCase;
 
 class TestAmedasTokyo extends AmedasTokyo
 {
-    private $stream;
-
-    protected function createClient()
+    protected function makeUrl($str)
     {
-        $this->setStream();
-        $client = new GoutteClient();
-        $client->setClient($this->getGuzzle());
+        $ds = DIRECTORY_SEPARATOR;
 
-        return $client;
-    }
-
-    private function setStream(): void
-    {
-        if ($this->stream === null) {
-            $ds = DIRECTORY_SEPARATOR;
-            $path = __DIR__ . $ds . 'data' . $ds . '20210228100000.json';
-            $resource = fopen($path, 'rb');
-            $this->stream = Stream::factory($resource);
-        }
-    }
-
-    private function getGuzzle()
-    {
-        $history = new History();
-        $mock = new Mock();
-        $mock->addResponse(new GuzzleResponse(200, [], $this->stream));
-        $guzzle = new GuzzleClient(['redirect.disable' => true, 'base_url' => '']);
-        $guzzle->getEmitter()->attach($mock);
-        $guzzle->getEmitter()->attach($history);
-
-        return $guzzle;
+        return __DIR__ . $ds . 'data' . $ds . '20210228100000.json';
     }
 }
 

@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Oppara\CurrentTemp;
 
-use Goutte\Client as GoutteClient;
-
 class AmedasTokyo
 {
     /**
@@ -27,25 +25,18 @@ class AmedasTokyo
         $this->url = $this->makeUrl($datetimeString);
     }
 
-    protected function createClient()
-    {
-        return new GoutteClient();
-    }
-
     public function getTemperature()
     {
-        $client = $this->createClient();
-
-        $crawler = $client->request('GET', $this->url);
-        $data = json_decode($crawler->text(), true);
+        $json = file_get_contents($this->url);
+        $data = json_decode($json, true);
 
         return $data[self::TOKYO]['temp'][0];
     }
 
-    public function makeUrl($str)
+    protected function makeUrl($str)
     {
         $datetime = new \DateTime($str, new \DateTimeZone('Asia/Tokyo'));
 
-        return sprintf(self::URL_FMT,  $datetime->format('YmdH0000'));
+        return sprintf(self::URL_FMT, $datetime->format('YmdH0000'));
     }
 }
