@@ -29,6 +29,9 @@ class AmedasTokyo
     {
         $json = file_get_contents($this->url);
         $data = json_decode($json, true);
+        if (!isset($data[self::TOKYO])) {
+            throw new \Exception('Undefined offset: ' . self::TOKYO);
+        }
 
         return $data[self::TOKYO]['temp'][0];
     }
