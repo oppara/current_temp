@@ -18,7 +18,7 @@
     "php": ">=5.5",
     "ext-mbstring": "*",
     "fabpot/goutte": "~2.0",
-    "abraham/twitteroauth": "0.5.*",
+    "abraham/twitteroauth": "~1.0",
     "mailgun/mailgun-php": "^1.8",
     "monolog/monolog": "@stable",
     "vlucas/phpdotenv": "^1.1"
